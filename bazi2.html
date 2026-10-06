@@ -316,7 +316,6 @@ document.getElementById('musicBtn').onclick = function() {
   }
   playClickSound();
 };
-
 var questions = [
   {
     word: "آب", emoji: "💧",
@@ -371,98 +370,41 @@ var questions = [
       { text: "آب", emoji: "💧", correct: false },
       { text: "کیف", emoji: "👜", correct: false }
     ]
+  },
+  {
+    word: "مُدیر", emoji: "👩‍💼",
+    options: [
+      { text: "آب", emoji: "💧", correct: false },
+      { text: "کَفش", emoji: "👟", correct: false },
+      { text: "مَسجِد", emoji: "🕌", correct: true },
+      { text: "کِتاب", emoji: "📖", correct: false }
+    ]
+  },
+  {
+    word: "مادَر", emoji: "👩",
+    options: [
+      { text: "کیف", emoji: "👜", correct: false },
+      { text: "مَسجِد", emoji: "🕌", correct: true },
+      { text: "کِتاب", emoji: "📖", correct: false },
+      { text: "آب", emoji: "💧", correct: false }
+    ]
+  },
+  {
+    word: "کِتاب", emoji: "📖",
+    options: [
+      { text: "مادَر", emoji: "👩", correct: false },
+      { text: "آب", emoji: "💧", correct: false },
+      { text: "کِلاس", emoji: "🏫", correct: true },
+      { text: "مَدرِسِه", emoji: "🏫", correct: false }
+    ]
+  },
+  {
+    word: "کِلاس", emoji: "🏫",
+    options: [
+      { text: "آزادِه", emoji: "🧕", correct: false },
+      { text: "مادَر", emoji: "👩", correct: false },
+      { text: "کِتاب", emoji: "📖", correct: true },
+      { text: "آب", emoji: "💧", correct: false }
+    ]
   }
 ];
-
-var currentQ = 0;
-var score = 0;
-var answered = false;
-
-function startGame() {
-  initAudio();
-  if (musicEnabled) startMusic();
-  currentQ = 0;
-  score = 0;
-  answered = false;
-  document.getElementById('gameScreen').style.display = 'block';
-  document.getElementById('endScreen').style.display = 'none';
-  document.getElementById('qTotal').textContent = questions.length;
-  document.getElementById('totalQ').textContent = questions.length;
-  document.getElementById('score').textContent = '0';
-  loadQuestion();
-}
-
-function loadQuestion() {
-  answered = false;
-  var q = questions[currentQ];
-  document.getElementById('qNum').textContent = currentQ + 1;
-  document.getElementById('mainWord').textContent = q.word;
-  document.getElementById('mainEmoji').textContent = q.emoji;
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('nextBtn').style.display = 'none';
-  var optsDiv = document.getElementById('options');
-  optsDiv.innerHTML = '';
-  var shuffled = q.options.slice().sort(function() { return Math.random() - 0.5; });
-  shuffled.forEach(function(opt) {
-    var btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = '<span class="emoji">' + opt.emoji + '</span>' + opt.text;
-    btn.onclick = function() { checkAnswer(btn, opt.correct); };
-    optsDiv.appendChild(btn);
-  });
-}
-
-function checkAnswer(btn, isCorrect) {
-  if (answered) return;
-  answered = true;
-  var allBtns = document.querySelectorAll('.option-btn');
-  allBtns.forEach(function(b) { b.disabled = true; });
-  var fb = document.getElementById('feedback');
-  if (isCorrect) {
-    btn.classList.add('correct');
-    score++;
-    document.getElementById('score').textContent = score;
-    fb.textContent = '✅ آفرین! درست بود';
-    fb.className = 'feedback good';
-    playCorrectSound();
-  } else {
-    btn.classList.add('wrong');
-    fb.textContent = '❌ اشتباه بود! دوباره فکر کن';
-    fb.className = 'feedback bad';
-    playWrongSound();
-  }
-  document.getElementById('nextBtn').style.display = 'inline-block';
-}
-
-document.getElementById('nextBtn').onclick = function() {
-  playClickSound();
-  currentQ++;
-  if (currentQ < questions.length) {
-    loadQuestion();
-  } else {
-    endGame();
-  }
-};
-
-function endGame() {
-  document.getElementById('gameScreen').style.display = 'none';
-  document.getElementById('endScreen').style.display = 'block';
-  document.getElementById('finalScore').textContent = score;
-  var title = document.getElementById('endTitle');
-  if (score === questions.length) title.textContent = '🏆 عالی! تو یک قهرمانی!';
-  else if (score >= questions.length / 2) title.textContent = '😊 خوب بود! بازم تمرین کن';
-  else title.textContent = '💪 اشکالی نداره، دوباره تلاش کن!';
-  playEndSound();
-}
-
-document.body.addEventListener('click', function firstClick() {
-  initAudio();
-  if (musicEnabled && !musicInterval) startMusic();
-  document.body.removeEventListener('click', firstClick);
-}, { once: true });
-
-startGame();
-</script>
-</body>
-</html>
